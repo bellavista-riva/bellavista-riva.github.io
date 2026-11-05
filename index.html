@@ -125,6 +125,7 @@ main{padding-block:6px calc(40px + env(safe-area-inset-bottom,0px))}
 .fin{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.45;color:var(--ink-2)}
 .fin p{margin:0 0 6px}
 .fin .cov{font-size:16px;color:var(--ink)}
+.fin .rl{display:inline-block;margin-top:4px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:15px;line-height:1}
 
 /* ---------- sheet ---------- */
 .scrim{position:fixed;inset:0;height:100dvh;z-index:40;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center}
@@ -345,7 +346,7 @@ function renderMenu(scrollTop){
   let fin = '<div class="fin"><p class="cov">' + esc(T('cover')) + ' € 2,70 · ' + esc(T('prices')) + '</p>';
   if (usedStar.has('*')) fin += '<p>' + esc(T('frozen')) + '</p>';
   if (usedStar.has('**')) fin += '<p>' + esc(T('blast')) + '</p>';
-  fin += '<p>' + esc(T('staff')) + '</p></div>';
+  fin += '<p>' + esc(T('staff')) + '</p><a class="rl" href="#" id="rl" aria-label="Refresh" title="Refresh">&#8635;</a></div>';
   $('#main').innerHTML = (top ? '<div class="topinfo">' + top + '</div>' : '') +
     (any ? secs.join('') : '<p class="empty">' + esc(T('none')) + '</p>') + fin;
   $('#chips').innerHTML = chips.join('');
@@ -447,6 +448,24 @@ function route(){
   if (D.langs.includes(h)) { st.lang = h; store.set('bv-l', h); showMenu(); } else showLanding();
 }
 window.addEventListener('hashchange', route);
+/* aggiornamento: se online c'e' una versione piu' recente (v.txt) ricarica la pagina saltando la copia salvata dal browser */
+const BUILD = '1793912161';
+function freshReload() { try { location.replace(location.pathname + '?v=' + Date.now() + location.hash); } catch (e) { location.reload(); } }
+document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('#rl'); if (a) { e.preventDefault(); freshReload(); } });
+function checkVersion() {
+  if (location.protocol !== 'https:' || BUILD === 'BUILD' + '_ID') return;
+  fetch('v.txt?' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.text() : '').then(v => {
+    v = (v || '').trim();
+    if (!v || v === BUILD || !/^[0-9]+$/.test(v)) return;
+    let done = ''; try { done = sessionStorage.getItem('bv-r') || ''; } catch (e) {}
+    if (done === v) return;
+    try { sessionStorage.setItem('bv-r', v); } catch (e) {}
+    location.replace(location.pathname + '?v=' + v + location.hash);
+  }).catch(() => {});
+}
+checkVersion();
+addEventListener('pageshow', ev => { if (ev.persisted) checkVersion(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkVersion(); });
 route();
 })();
 </script>
