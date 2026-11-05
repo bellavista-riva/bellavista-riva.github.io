@@ -105,7 +105,9 @@ main{padding-block:6px calc(40px + env(safe-area-inset-bottom,0px))}
 .pr .vo{color:var(--ink-2);font-size:14.5px;align-self:center}
 .dd{margin:3px 0 0;color:var(--ink-2);font-size:16px;line-height:1.38}
 .itn{margin:5px 0 0;font-size:16px;font-weight:500;line-height:1.3;color:var(--ink)}
-.itn span{letter-spacing:.05em;text-transform:uppercase;font-weight:400;font-size:11.5px;margin-inline-end:6px;color:var(--brown-2)}
+.itn{display:flex;align-items:baseline;gap:7px}
+.itn span{flex:0 0 auto;letter-spacing:.05em;text-transform:uppercase;font-weight:400;font-size:11.5px;color:var(--brown-2)}
+.itn bdi{min-width:0;text-align:start;unicode-bidi:isolate}
 .nt{margin:4px 0 0;font-size:14.5px;color:var(--brown);font-style:italic}
 .tags{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:5px 12px}
 .tags li{display:inline-flex;align-items:center;gap:5px;font-size:13.5px;color:var(--ink-2);line-height:1.1}
@@ -272,7 +274,7 @@ function dishHtml(it, ev){
   let h = '<article class="dish' + (ev.unsuitable ? ' off' : '') + '"><div class="dh"><h3>' + esc(L.t) + stars + '</h3>' + price(it) + '</div>';
   if (L.d) h += '<p class="dd">' + esc(L.d) + '</p>';
   if (st.lang !== 'it' && it.k !== 'pz' && L.t !== I.t)
-    h += '<p class="itn"><span>' + esc(T('italian')) + '</span>' + esc(I.t) + '</p>';
+    h += '<p class="itn"><span>' + esc(T('italian')) + '</span><bdi dir="ltr">' + esc(I.t) + '</bdi></p>';
   if (ev.sideHit.length) h += '<p class="flag side">' + esc(T('sideMustard')) + '</p>';
   else if (it.n === 'mustard') h += '<p class="nt">' + esc(T('noteTartare')) + '</p>';
   if (it.n === 'bread') h += '<p class="nt">' + esc(T('noteBread')) + '</p>';
@@ -448,7 +450,7 @@ function route(){
 }
 window.addEventListener('hashchange', route);
 /* aggiornamento: se online c'e' una versione piu' recente (v.txt) ricarica la pagina saltando la copia salvata dal browser */
-const BUILD = '1793912605';
+const BUILD = '1793912867';
 function checkVersion() {
   if (location.protocol !== 'https:' || BUILD === 'BUILD' + '_ID') return;
   fetch('v.txt?' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.text() : '').then(v => {
