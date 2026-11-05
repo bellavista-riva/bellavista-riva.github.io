@@ -105,7 +105,8 @@ main{padding-block:6px calc(40px + env(safe-area-inset-bottom,0px))}
 .pr .vo{color:var(--ink-2);font-size:14.5px;align-self:center}
 .dd{margin:3px 0 0;color:var(--ink-2);font-size:16px;line-height:1.38}
 .itn{margin:5px 0 0;font-size:16px;font-weight:500;line-height:1.3;color:var(--ink)}
-.itn{display:flex;align-items:baseline;gap:7px}
+.itn{display:flex;align-items:baseline;gap:7px;direction:ltr;text-align:left}
+.itn span{unicode-bidi:isolate}
 .itn span{flex:0 0 auto;letter-spacing:.05em;text-transform:uppercase;font-weight:400;font-size:11.5px;color:var(--brown-2)}
 .itn bdi{min-width:0;text-align:start;unicode-bidi:isolate}
 .nt{margin:4px 0 0;font-size:14.5px;color:var(--brown);font-style:italic}
@@ -450,7 +451,7 @@ function route(){
 }
 window.addEventListener('hashchange', route);
 /* aggiornamento: se online c'e' una versione piu' recente (v.txt) ricarica la pagina saltando la copia salvata dal browser */
-const BUILD = '1793912867';
+const BUILD = '1793912996';
 function checkVersion() {
   if (location.protocol !== 'https:' || BUILD === 'BUILD' + '_ID') return;
   fetch('v.txt?' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.text() : '').then(v => {
